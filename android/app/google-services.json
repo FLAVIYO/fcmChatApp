@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "967031698741",
+    "project_id": "fcmchatapp-d6a61",
+    "storage_bucket": "fcmchatapp-d6a61.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967031698741:android:7df63faa2d40c0bc14087c",
+        "android_client_info": {
+          "package_name": "com.example.fcmchatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7aOWLad3Md3eBFyAUCdC3clHHllnQAKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,10 +12,7 @@
 7. [Testing Strategy](#testing-strategy)
 8. [Dependency Injection](#dependency-injection)
 9. [Firebase Integration](#firebase-integration)
-<!-- 10. [Key Packages](#key-packages)
-11. [Test Coverage](#test-coverage)
-12. [Folder Structure](#folder-structure) -->
-13. [Getting Started](#getting-started)
+10. [Getting Started](#getting-started)
 
 ## Architecture Overview
 
@@ -49,6 +46,7 @@ test/
 - Firebase backend for authentication and data storage
 - Dependency injection via GetIt
 - Clean routing with named routes
+- freezed for Immutable data classes
 
 
 ## Key Design Decisions

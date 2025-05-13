@@ -1,6 +1,6 @@
 import 'package:fcmchatapp/firebase_options.dart';
 import 'package:fcmchatapp/services/auth_service.dart';
-import 'package:fcmchatapp/services/firebase_auth_service.dart';
+import 'package:fcmchatapp/services/database_service.dart';
 import 'package:fcmchatapp/services/navigation_service.dart';
 import 'package:fcmchatapp/utils/app_routes.dart';
 import 'package:fcmchatapp/utils/route_generator.dart';
@@ -28,7 +28,7 @@ Future<void> setupfirebase() async {
 
 Future<void> checkUserValidity() async {
   final authService = getIt<AuthService<User>>();
-  if (authService is FirebaseAuthService) {
+  if (authService is DatabaseService) {
     await authService.checkUserValidity();
   }
 }

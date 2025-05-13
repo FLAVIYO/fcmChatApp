@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcmchatapp/services/database_service.dart';
 import 'package:fcmchatapp/services/navigation_service.dart';
 import 'package:fcmchatapp/services/profile_service.dart';
 import 'package:fcmchatapp/utils/toast_config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fcmchatapp/services/auth_service.dart';
-import 'package:fcmchatapp/services/firebase_auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fcmchatapp/utils/app_logger.dart';
@@ -24,9 +24,9 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton(() => AppLogger());
   getIt.registerLazySingleton(() => AppToasts());
   
-  // Register AuthService with Firebase implementation
+  // Register DatabaseService (implements AuthService)
   getIt.registerLazySingleton<AuthService<User>>(
-    () => FirebaseAuthService(
+    () => DatabaseService(
       firebaseAuth: getIt(),
       firestore: getIt(),
     ),

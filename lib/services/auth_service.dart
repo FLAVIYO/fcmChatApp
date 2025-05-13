@@ -1,9 +1,7 @@
-
 abstract class AuthResult<T> {
   final T? user;
   final String? error;
   
-
   AuthResult({this.user, this.error});
 }
 
@@ -30,5 +28,5 @@ abstract class AuthService<T> {
     required String name,
   });
 
-   Future<void> checkUserValidity();
+  Future<void> checkUserValidity();
 }

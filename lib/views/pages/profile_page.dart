@@ -43,31 +43,66 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _updateProfilePhoto() async {
-    final image = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-      maxWidth: 800,
-      maxHeight: 800,
-    );
-    if (image == null) return;
-
-    setState(() => _isUploading = true);
-
     try {
+      _logger.debug('Starting image picker process...');
+      final XFile? pickedFile = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+
+      if (pickedFile == null) {
+        _logger.debug('User cancelled image selection');
+        return;
+      }
+
+      _logger.debug('Picked file type: ${pickedFile.runtimeType}');
+      _logger.debug('Picked file path: ${pickedFile.path}');
+
+      setState(() => _isUploading = true);
+
+      // Conversion step
+      _logger.debug('Attempting XFile to File conversion...');
+      final File imageFile = File(pickedFile.path);
+      _logger.debug('Converted file type: ${imageFile.runtimeType}');
+      _logger.debug('File exists: ${await imageFile.exists()}');
+
+      // Compression step
+      _logger.debug('Starting image compression...');
+      final File compressedFile = await _compressImage(imageFile);
+      _logger.debug('Compressed file type: ${compressedFile.runtimeType}');
+      _logger.debug('Compressed file exists: ${await compressedFile.exists()}');
+      _logger.debug(
+        'Compressed file size: ${await compressedFile.length()} bytes',
+      );
+
       final profile = await _profileFuture;
-      final compressedFile = await _compressImage(File(image.path));
+      _logger.debug('User profile loaded: ${profile.uid}');
+
+      _logger.debug('Starting profile photo upload...');
       final photoUrl = await _profileService.uploadProfilePhoto(compressedFile);
+      _logger.debug('Upload completed. Photo URL: $photoUrl');
+
       await _profileService.validateAndUpdateProfile(
         userId: profile.uid,
         photoUrl: photoUrl,
       );
+
+      _logger.debug('Profile update successful');
       _loadProfile();
-    } catch (e) {
-      _logger.error('Failed to update photo: ${e.toString()}');
-      _toasts.showError(
-        context: context,
-        message: 'Failed to update photo Please try again.',
+    } catch (e, stackTrace) {
+      _logger.error(
+        'Photo update failed :${e.toString()} ', e, stackTrace,
+        extras: {
+          'error_type': e.runtimeType.toString(),
+          'timestamp': DateTime.now().toIso8601String(),
+        },
       );
+      if (mounted) {
+        _toasts.showError(
+          context: context,
+          message: 'Photo update failed: ${e.toString()}',
+        );
+      }
     } finally {
       if (mounted) {
         setState(() => _isUploading = false);
@@ -76,14 +111,37 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<File> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      '${file.path}_compressed.jpg',
-      quality: 80,
-      minWidth: 600,
-      minHeight: 600,
-    );
-    return File(result?.path ?? file.path);
+    _logger.debug('Starting image compression...');
+    _logger.debug('Input file: ${file.path}');
+    _logger.debug('Input file size: ${await file.length()} bytes');
+
+    try {
+      final result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        '${file.path}_compressed.jpg',
+        quality: 80,
+        minWidth: 600,
+        minHeight: 600,
+      );
+
+      if (result == null) {
+        _logger.warning('Compression returned null, using original file');
+        return file;
+      }
+
+      _logger.debug('Compression successful. Output path: ${result.path}');
+      final compressedFile = File(result.path);
+      _logger.debug(
+        'Compressed file size: ${await compressedFile.length()} bytes',
+      );
+
+      return compressedFile;
+    } catch (e, stackTrace) {
+      _logger.error(
+        'Image compression failed', e, stackTrace,
+      );
+      return file; // Fallback to original
+    }
   }
 
   @override
@@ -356,7 +414,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       }
                     } catch (e) {
                       if (mounted) {
-                        _logger.error('Failed to update: ${e.toString()}');
+                        _logger.error('Profile update failed', e, StackTrace.current);
                       }
                     }
                   }

@@ -12,7 +12,6 @@ part of 'user_profile.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$UserProfile {
 
@@ -23,8 +22,6 @@ mixin _$UserProfile {
 @pragma('vm:prefer-inline')
 $UserProfileCopyWith<UserProfile> get copyWith => _$UserProfileCopyWithImpl<UserProfile>(this as UserProfile, _$identity);
 
-  /// Serializes this UserProfile to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -32,7 +29,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.lastActiveAt, lastActiveAt) || other.lastActiveAt == lastActiveAt));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,uid,email,displayName,photoUrl,bio,emailVerified,createdAt,lastActiveAt);
 
@@ -84,11 +81,11 @@ as DateTime?,
 
 
 /// @nodoc
-@JsonSerializable()
 
-class _UserProfile implements UserProfile {
-  const _UserProfile({required this.uid, required this.email, this.displayName, this.photoUrl, this.bio, this.emailVerified = false, required this.createdAt, this.lastActiveAt});
-  factory _UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
+
+class _UserProfile extends UserProfile {
+  const _UserProfile({required this.uid, required this.email, this.displayName, this.photoUrl, this.bio, this.emailVerified = false, required this.createdAt, this.lastActiveAt}): super._();
+  
 
 @override final  String uid;
 @override final  String email;
@@ -105,17 +102,14 @@ class _UserProfile implements UserProfile {
 @pragma('vm:prefer-inline')
 _$UserProfileCopyWith<_UserProfile> get copyWith => __$UserProfileCopyWithImpl<_UserProfile>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$UserProfileToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.photoUrl, photoUrl) || other.photoUrl == photoUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.lastActiveAt, lastActiveAt) || other.lastActiveAt == lastActiveAt));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,uid,email,displayName,photoUrl,bio,emailVerified,createdAt,lastActiveAt);
 
